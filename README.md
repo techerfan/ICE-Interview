@@ -7,7 +7,7 @@ We expect the candidates to refactor the code to best their abilities to make th
 * Clone the repository
 * Make small changes, commit
 * Repeat
-
+* The finished work should include all the git commits whether in a repository or zip file
 
 
 ## How to run the application?
