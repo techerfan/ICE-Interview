@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-	mysql.MigrateDatabase()
+	db := mysql.New()
+	db.MigrateDatabase()
 
 	ginEngine := gin.Default()
 
