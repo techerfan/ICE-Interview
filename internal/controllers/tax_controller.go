@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"errors"
-	"interview/internal/calculator"
+	"interview/internal/service/calculator"
 	"net/http"
 	"time"
 
