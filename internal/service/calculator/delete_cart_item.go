@@ -2,7 +2,7 @@ package calculator
 
 import (
 	"fmt"
-	db2 "interview/internal/db"
+	db2 "interview/internal/db/mysql"
 	"interview/internal/entity"
 	"strconv"
 

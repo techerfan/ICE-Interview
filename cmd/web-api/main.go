@@ -2,14 +2,14 @@ package main
 
 import (
 	"interview/internal/controllers"
-	"interview/internal/db"
+	"interview/internal/db/mysql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db.MigrateDatabase()
+	mysql.MigrateDatabase()
 
 	ginEngine := gin.Default()
 

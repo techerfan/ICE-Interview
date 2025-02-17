@@ -3,7 +3,7 @@ package calculator
 import (
 	"fmt"
 	"html/template"
-	db2 "interview/internal/db"
+	db2 "interview/internal/db/mysql"
 	"interview/internal/entity"
 	"log"
 	"strings"
