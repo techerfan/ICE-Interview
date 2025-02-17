@@ -7,7 +7,7 @@ const (
 	CartClosed CartStatus = "closed"
 )
 
-type CartEntity struct {
+type Cart struct {
 	ID        uint       `json:"id"`
 	Total     float64    `json:"total"`
 	SessionID string     `json:"session_id"`
