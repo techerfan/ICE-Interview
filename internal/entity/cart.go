@@ -1,17 +1,15 @@
 package entity
 
-import (
-	"gorm.io/gorm"
-)
+type CartStatus string
 
 const (
-	CartOpen   = "open"
-	CartClosed = "closed"
+	CartOpen   CartStatus = "open"
+	CartClosed CartStatus = "closed"
 )
 
 type CartEntity struct {
-	gorm.Model
-	Total     float64
-	SessionID string
-	Status    string
+	ID        uint       `json:"id"`
+	Total     float64    `json:"total"`
+	SessionID string     `json:"session_id"`
+	Status    CartStatus `json:"status"`
 }

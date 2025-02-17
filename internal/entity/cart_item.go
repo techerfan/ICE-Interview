@@ -1,11 +1,9 @@
 package entity
 
-import "gorm.io/gorm"
-
 type CartItem struct {
-	gorm.Model
-	CartID      uint
-	ProductName string
-	Quantity    int
-	Price       float64
+	ID          uint    `json:"id"`
+	CartID      uint    `json:"cart_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int     `json:"quantity"`
+	Price       float64 `json:"price"`
 }
