@@ -17,6 +17,12 @@ func (m *Mysql) CreateCartItem(ctx context.Context, cartItem entity.CartItem) (e
 	return mapCartItemToEntity(model), nil
 }
 
+func (m *Mysql) UpdateCartItem(ctx context.Context, cartItem entity.CartItem) error {
+	var model = mapEntityToCartItem(cartItem)
+
+	return m.db.WithContext(ctx).Save(&model).Error
+}
+
 func (m *Mysql) FindCartItemByID(ctx context.Context, id uint) (entity.CartItem, bool, error) {
 	var cartItem CartItem
 
