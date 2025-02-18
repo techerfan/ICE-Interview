@@ -22,19 +22,8 @@ func (s *Service) DeleteCartItem(ctx context.Context, req dto.DeleteCartItemRequ
 	}
 
 	if cartEntity.Status == entity.CartClosed {
-		// TODO:
-		// c.Redirect(302, "/")
 		return richerror.New(op).WithKind(richerror.KindInvalid).WithMessage("cart is closeds")
 	}
-
-	// TODO: item existense must be checked using the validator
-	// var cartItemEntity entity.CartItem
-
-	// result = db.Where(" ID  = ?", cartItemID).First(&cartItemEntity)
-	// if result.Error != nil {
-	// 	c.Redirect(302, "/")
-	// 	return
-	// }
 
 	if err := s.repo.DeleteCartItemByID(ctx, req.CartItemID); err != nil {
 		return richerror.New(op).WithErr(err).WithKind(richerror.KindUnexpected)
