@@ -3,7 +3,10 @@ package main
 import (
 	"interview/internal/controllers"
 	"interview/internal/db/mysql"
-	"net/http"
+	"interview/internal/db/redis/productredis"
+	"interview/internal/service/cart"
+	"interview/internal/service/product"
+	"interview/internal/validator/cartvalidator"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,16 +15,20 @@ func main() {
 	db := mysql.New()
 	db.MigrateDatabase()
 
+	productRedis := productredis.New(productredis.Config{
+		Host: "127.0.0.1",
+		Port: 4000,
+		DB:   1,
+	})
+
+	productService := product.New(productRedis)
+
+	cartService := cart.New(db, productService)
+
+	cartValidator := cartvalidator.New(productRedis, db)
+
 	ginEngine := gin.Default()
 
-	var taxController controllers.TaxController
-	ginEngine.GET("/", taxController.ShowAddItemForm)
-	ginEngine.POST("/add-item", taxController.AddItem)
-	ginEngine.GET("/remove-cart-item", taxController.DeleteCartItem)
-	srv := &http.Server{
-		Addr:    ":8088",
-		Handler: ginEngine,
-	}
-
-	srv.ListenAndServe()
+	cartController := controllers.New(cartService, cartValidator, ginEngine)
+	cartController.Start(":8088")
 }
