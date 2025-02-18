@@ -48,7 +48,7 @@ func (m *Mysql) FindCartItemByID(ctx context.Context, id uint) (entity.CartItem,
 func (m *Mysql) FindCartItemByProduct(ctx context.Context, cartID uint, product string) (entity.CartItem, bool, error) {
 	var cartItem CartItem
 
-	if err := m.db.WithContext(ctx).Where("cart_id = ? AND ProductName = ?", cartID, product).First(&cartItem).Error; err != nil {
+	if err := m.db.WithContext(ctx).Where("cart_id = ? AND product_name = ?", cartID, product).First(&cartItem).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity.CartItem{}, false, nil
 		}
@@ -58,10 +58,10 @@ func (m *Mysql) FindCartItemByProduct(ctx context.Context, cartID uint, product 
 	return mapCartItemToEntity(cartItem), true, nil
 }
 
-func (m *Mysql) FindCartItemsBycartID(ctx context.Context, cartID uint) ([]entity.CartItem, error) {
+func (m *Mysql) FindCartItemsByCartID(ctx context.Context, cartID uint) ([]entity.CartItem, error) {
 	var cartItems []CartItem
 
-	if err := m.db.WithContext(ctx).Where("cart_id = ?", cartID).First(&cartItems).Error; err != nil {
+	if err := m.db.WithContext(ctx).Where("cart_id = ?", cartID).Find(&cartItems).Error; err != nil {
 		return nil, err
 	}
 
