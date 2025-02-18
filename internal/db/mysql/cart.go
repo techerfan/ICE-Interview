@@ -26,7 +26,7 @@ func (m *Mysql) UpdateCart(ctx context.Context, cart entity.Cart) error {
 func (m *Mysql) FindOpenCartBySessionID(ctx context.Context, sessionID string) (entity.Cart, bool, error) {
 	var cart Cart
 
-	if err := m.db.WithContext(ctx).Where("status = ? AND session_id = ?", entity.CartOpen).First(&cart).Error; err != nil {
+	if err := m.db.WithContext(ctx).Where("status = ? AND session_id = ?", entity.CartOpen, sessionID).First(&cart).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return entity.Cart{}, false, nil
 		}
