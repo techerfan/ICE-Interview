@@ -18,7 +18,16 @@ func (m *Mysql) CreateCartItem(ctx context.Context, cartItem entity.CartItem) (e
 }
 
 func (m *Mysql) UpdateCartItem(ctx context.Context, cartItem entity.CartItem) error {
-	var model = mapEntityToCartItem(cartItem)
+	var model CartItem
+
+	if err := m.db.WithContext(ctx).Where("id = ?", cartItem.ID).First(&model).Error; err != nil {
+		return err
+	}
+
+	model.CartID = cartItem.CartID
+	model.Price = cartItem.Price
+	model.ProductName = cartItem.ProductName
+	model.Quantity = cartItem.Quantity
 
 	return m.db.WithContext(ctx).Save(&model).Error
 }
