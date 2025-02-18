@@ -23,6 +23,18 @@ func (m *Mysql) UpdateCart(ctx context.Context, cart entity.Cart) error {
 	return m.db.WithContext(ctx).Save(&model).Error
 }
 
+func (m *Mysql) FindCartByID(ctx context.Context, cartID uint) (entity.Cart, bool, error) {
+	var cart Cart
+	if err := m.db.WithContext(ctx).Where("id = ?", cartID).First(&cart).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return entity.Cart{}, false, nil
+		}
+		return entity.Cart{}, false, err
+	}
+
+	return mapCartToEntity(cart), true, nil
+}
+
 func (m *Mysql) FindOpenCartBySessionID(ctx context.Context, sessionID string) (entity.Cart, bool, error) {
 	var cart Cart
 
