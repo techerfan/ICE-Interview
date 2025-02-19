@@ -6,6 +6,8 @@ import (
 	"interview/internal/entity"
 )
 
+//go:generate mockgen -source=./service.go -destination=../../mocks/cartservice_repo_mock/cartservice_repo.go -package=cartservicerepomock .
+
 type Repository interface {
 	// Cart functionalities
 	CreateCart(ctx context.Context, cart entity.Cart) (entity.Cart, error)

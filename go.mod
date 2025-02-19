@@ -1,11 +1,14 @@
 module interview
 
-go 1.21.0
+go 1.22
+
+toolchain go1.23.6
 
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/redis/go-redis/v9 v9.7.0
+	go.uber.org/mock v0.5.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/gorm v1.25.5
 )

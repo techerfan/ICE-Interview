@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+//go:generate mockgen -source=./service.go -destination=../../mocks/productservice_cache_mock/productservice_cache.go -package=productservicecache .
+
 var defaultItemPriceMapping = map[string]float64{
 	"shoe":  100,
 	"purse": 200,
