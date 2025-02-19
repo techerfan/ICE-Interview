@@ -14,7 +14,7 @@ func (s *Service) DeleteCartItem(ctx context.Context, req dto.DeleteCartItemRequ
 	var cartExist bool
 	var err error
 	cartEntity, cartExist, err = s.repo.FindOpenCartBySessionID(ctx, req.SessionID)
-	if !cartExist && err != nil {
+	if !cartExist && err == nil {
 		return richerror.New(op).WithKind(richerror.KindNotFound).WithErr(err).
 			WithMessage("cart does not exist")
 	} else if err != nil {

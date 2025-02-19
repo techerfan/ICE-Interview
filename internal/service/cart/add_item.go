@@ -52,9 +52,10 @@ func (s *Service) AddItemToCart(ctx context.Context, req dto.AddItemToCartReques
 		}
 	} else {
 		cartItemEntity, exist, err = s.repo.FindCartItemByProduct(ctx, cartEntity.ID, req.Product)
-
 		if err != nil {
-			return richerror.New(op).WithMessage("invalid item name").WithKind(richerror.KindUnexpected)
+			return richerror.New(op).
+				WithMessage("could not search database for cart item").
+				WithKind(richerror.KindUnexpected)
 		}
 
 		if !exist {
