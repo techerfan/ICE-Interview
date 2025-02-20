@@ -1,18 +1,15 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
 	"interview/internal/dto"
 	"interview/internal/pkg/httpmsg"
 	"interview/internal/service/cart"
 	"interview/internal/validator/cartvalidator"
 	"log"
-	"net/http"
 	"strconv"
 	"strings"
 	"text/template"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -46,19 +43,23 @@ func New(
 }
 
 func (c *CartController) ShowAddItemForm(ctx *gin.Context) {
-	sessionID, err := ctx.Request.Cookie("ice_session_id")
-	if errors.Is(err, http.ErrNoCookie) {
-		ctx.SetCookie("ice_session_id", time.Now().String(), 3600, "/", "localhost", false, true)
-	}
+	sessionID := ctx.GetString(sessionIDKey)
 
 	data := map[string]interface{}{
 		"Error": ctx.Query("error"),
 		//"cartItems": cartItems,
 	}
 
-	resp, err := c.cartService.GetCartData(ctx.Request.Context(), dto.GetCartDataRequest{SessionID: sessionID.Value})
+	resp, err := c.cartService.GetCartData(ctx.Request.Context(), dto.GetCartDataRequest{SessionID: sessionID})
 	if err != nil {
-		// TODO: handle the err
+		msg, code := httpmsg.Error(err)
+		if code > 500 {
+			// TODO: log the error
+			ctx.String(code, msg)
+			return
+		} else if code == 404 {
+			// TODO: create the cart here
+		}
 	}
 
 	var items []map[string]interface{}
@@ -88,12 +89,12 @@ func (c *CartController) ShowAddItemForm(ctx *gin.Context) {
 }
 
 func (c *CartController) AddItem(ctx *gin.Context) {
-	cookie, err := ctx.Request.Cookie("ice_session_id")
+	sessionID := ctx.GetString(sessionIDKey)
 
-	if err != nil || errors.Is(err, http.ErrNoCookie) || (cookie != nil && cookie.Value == "") {
-		ctx.Redirect(302, "/")
-		return
-	}
+	// if err != nil || errors.Is(err, http.ErrNoCookie) || (cookie != nil && cookie.Value == "") {
+	// 	ctx.Redirect(302, "/")
+	// 	return
+	// }
 
 	addItemForm, err := c.getCartItemForm(ctx)
 	if err != nil {
@@ -108,7 +109,7 @@ func (c *CartController) AddItem(ctx *gin.Context) {
 	}
 
 	req := dto.AddItemToCartRequest{
-		SessionID: cookie.Value,
+		SessionID: sessionID,
 		Product:   addItemForm.Product,
 		Quantity:  int(quantity),
 	}
@@ -129,12 +130,13 @@ func (c *CartController) AddItem(ctx *gin.Context) {
 }
 
 func (c *CartController) DeleteCartItem(ctx *gin.Context) {
-	cookie, err := ctx.Request.Cookie("ice_session_id")
+	sessionID := ctx.GetString(sessionIDKey)
+	// cookie, err := ctx.Request.Cookie("ice_session_id")
 
-	if err != nil || errors.Is(err, http.ErrNoCookie) || (cookie != nil && cookie.Value == "") {
-		ctx.Redirect(302, "/")
-		return
-	}
+	// if err != nil || errors.Is(err, http.ErrNoCookie) || (cookie != nil && cookie.Value == "") {
+	// 	ctx.Redirect(302, "/")
+	// 	return
+	// }
 
 	cartItemIDString := ctx.Query("cart_item_id")
 	if cartItemIDString == "" {
@@ -149,7 +151,7 @@ func (c *CartController) DeleteCartItem(ctx *gin.Context) {
 	}
 
 	req := dto.DeleteCartItemRequest{
-		SessionID:  cookie.Value,
+		SessionID:  sessionID,
 		CartItemID: uint(cartItemID),
 	}
 
@@ -160,7 +162,6 @@ func (c *CartController) DeleteCartItem(ctx *gin.Context) {
 
 	err = c.cartService.DeleteCartItem(ctx.Request.Context(), req)
 	if err != nil {
-		// TODO: handle the error
 		msg, _ := httpmsg.Error(err)
 		ctx.Redirect(302, "/?error="+msg)
 	}
