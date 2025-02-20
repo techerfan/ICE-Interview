@@ -1,19 +1,34 @@
 package mysql
 
 import (
+	"fmt"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+type Config struct {
+	Host     string
+	Port     string
+	Username string
+	Password string
+	DBName   string
+}
 
 type Mysql struct {
 	db *gorm.DB
 }
 
-func New() *Mysql {
+func New(config Config) *Mysql {
 
 	// MySQL connection string
-	// TODO: these attributes must be read from environment variables
-	dsn := "ice_user:9xz3jrd8wf@tcp(localhost:4001)/ice_db?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		config.Username,
+		config.Password,
+		config.Host,
+		config.Port,
+		config.DBName,
+	)
 
 	// Open the connection to the database
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
