@@ -40,6 +40,8 @@ func New(
 		ginEngine:     ginEngine,
 	}
 
+	controller.setupRoutes(ginEngine)
+
 	return controller
 }
 
