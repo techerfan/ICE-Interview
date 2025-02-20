@@ -17,8 +17,20 @@ services:
       - MYSQL_PASSWORD=9xz3jrd8wf
     volumes:
       - orm_data_mysql:/var/lib/mysql
+  mysql_test:
+    image: mysql:8.0
+    ports:
+      - "4002:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=9xz3jrd8wf
+      - MYSQL_DATABASE=ice_db
+      - MYSQL_USER=ice_user
+      - MYSQL_PASSWORD=9xz3jrd8wf
+    volumes:
+      - orm_data_mysql_test:/var/lib/mysql
 
 
 volumes:
   orm_data_mysql:
+  orm_data_mysql_test:
   orm_data_redis:
